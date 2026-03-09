@@ -21,11 +21,18 @@
     </div>
 
     <script>
+        // Логіка першої кнопки (перемикач кольору)
         const button = document.getElementById('myBtn');
         button.addEventListener('click', () => {
-            document.body.style.backgroundColor = '#d1c4e9';
+            // Перевіряємо, чи поточний колір вже такий, як ми задали
+            if (document.body.style.backgroundColor === 'rgb(209, 196, 233)') {
+                document.body.style.backgroundColor = '#eef2f3'; // Повертаємо назад
+            } else {
+                document.body.style.backgroundColor = '#d1c4e9'; // Робимо фіолетовим
+            }
         });
 
+        // Логіка коментарів
         const input = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const section = document.getElementById('commentsSection');
