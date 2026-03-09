@@ -7,42 +7,36 @@
 </head>
 <body>
 
-    <h1>hello world </h1>
+    <h1>hello world</h1>
     <p>Це мій перший сайт, створений у VS Code.</p>
     
     <img src="foto.jpn.png" alt="картинка" width="300">
     
-    <br>
-    <button id="myBtn">Тикай!</button>
-
-    <hr>
-    <h3>Залишити коментар:</h3>
-    <input type="text" id="userInput" placeholder="Напишіть щось...">
-    <button id="sendBtn">Надіслати</button>
-
-    <div id="commentsSection"></div>
+    <div id="commentsSection">
+        <button id="myBtn">Тикай!</button>
+        <hr>
+        <h3>Залишити коментар:</h3>
+        <input type="text" id="userInput" placeholder="Напишіть щось...">
+        <button id="sendBtn">Надіслати</button>
+    </div>
 
     <script>
-        // Перша кнопка
         const button = document.getElementById('myBtn');
-        button.addEventListener('click', function() {
-            alert('НАТИСНІТЬ "OK" щоб замінити колір');
-            document.body.style.backgroundColor = 'purple';
+        button.addEventListener('click', () => {
+            document.body.style.backgroundColor = '#d1c4e9';
         });
 
-        // Друга кнопка (коментарі)
         const input = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const section = document.getElementById('commentsSection');
 
-        sendBtn.addEventListener('click', function() {
+        sendBtn.addEventListener('click', () => {
             const text = input.value;
-            // Це все ще небезпечний код (XSS), але тепер він працює правильно
-            const newComment = document.createElement('p'); // 1. Створюємо "безпечну" коробку для тексту
-newComment.textContent = `Користувач сказав: ${text}`; // 2. Вкладаємо туди тільки текст
-section.appendChild(newComment); // 3. Прикріплюємо на сторінку
+            const newComment = document.createElement('p');
+            newComment.textContent = `Користувач сказав: ${text}`;
+            section.appendChild(newComment);
             input.value = '';
         });
     </script>
-<body>
+</body>
 </html>

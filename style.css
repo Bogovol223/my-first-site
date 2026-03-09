@@ -1,76 +1,43 @@
-body {
-    background-color: grey;
-    color: chocolate;
-    text-align: center;
+/* Загальні стилі */
+* {
+    transition: all 0.3s ease;
+    box-sizing: border-box;
 }
-/* Робимо сайт "повітряним" */
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
-    max-width: 800px;
-    margin: 40px auto; /* Центруємо сайт */
-    padding: 10px;
-    background-color:lightblue;
-}
-
-/* Оформлення блоку з коментарями */
-#comments-section {
-    background: rgb(255, 0, 0);
-    padding: 20px;
-    border-radius: 8px; /* Округлі кути */
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* Легка тінь для глибини */
-}
-
-/* Стиль для кнопки */
-button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-button:hover {
-    background-color: #0056b3;
-}
-/* Додаємо плавний перехід для всіх елементів */
-* {
-    transition: all 0.3s ease;
-}
-
-body {
-    background-color: #eef2f3; /* М'який сіро-блакитний фон */
+    margin: 0;
+    padding: 40px 20px;
+    background-color: #eef2f3;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 40px 20px;
 }
 
 /* Наша головна картка */
-#comments-section {
+#commentsSection {
     background: #ffffff;
     width: 100%;
     max-width: 500px;
     padding: 30px;
-    border-radius: 15px; /* Більш заокруглені кути */
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05); /* М'яка, глибока тінь */
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     margin-top: 20px;
 }
 
-/* Оформлення поля вводу */
+/* Оформлення полів */
 input {
     width: 100%;
     padding: 12px;
     margin-bottom: 15px;
     border: 2px solid #ddd;
     border-radius: 8px;
-    box-sizing: border-box; /* Щоб відступи не ламали ширину */
 }
 
-/* Спеціальний стиль для кнопки */
+/* Стиль для кнопок */
 button {
-    background: linear-gradient(135deg, #6e8efb, #a777e3); /* Градієнт! */
+    background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     font-weight: bold;
     border: none;
@@ -78,12 +45,14 @@ button {
     border-radius: 8px;
     cursor: pointer;
     width: 100%;
+    margin-bottom: 10px;
 }
 
 button:hover {
-    transform: translateY(-2px); /* Кнопка "підстрибує" при наведенні */
+    transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
 }
+
 img {
     max-width: 100%;
     border-radius: 10px;
