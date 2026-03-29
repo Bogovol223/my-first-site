@@ -2,47 +2,74 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
-    <title>Мій сайт</title>
+    <title>Мій Кібер-сайт</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
     <h1>hello world</h1>
-    <p>Це мій перший сайт, створений у VS Code.</p>
+    <p>Це мій перший сайт із хмарною базою даних!</p>
     
-    <img src="my-photo.png.png" alt="картинка" width="300">
+    <img src="my-photo.png" alt="картинка" width="300">
     
     <div id="commentsSection">
         <button id="myBtn">Тикай!</button>
         <hr>
         <h3>Залишити коментар:</h3>
         <input type="text" id="userInput" placeholder="Напишіть щось...">
-        <button id="sendBtn">Надіслати</button>
+        <button id="sendBtn">Надіслати в хмару</button>
+        <div id="displayComments"></div>
     </div>
 
-    <script>
-        // Логіка першої кнопки (перемикач кольору)
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        // Твоя конфігурація Firebase
+        const firebaseConfig = {
+            databaseURL: "https://cyber-app-d1e13-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "cyber-app-d1e13",
+        };
+
+        // Ініціалізація
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const commentsRef = ref(db, 'comments');
+
+        // 1. Логіка перемикача кольору (залишається локальною)
         const button = document.getElementById('myBtn');
         button.addEventListener('click', () => {
-            // Перевіряємо, чи поточний колір вже такий, як ми задали
             if (document.body.style.backgroundColor === 'rgb(209, 196, 233)') {
-                document.body.style.backgroundColor = '#eef2f3'; // Повертаємо назад
+                document.body.style.backgroundColor = '#eef2f3';
             } else {
-                document.body.style.backgroundColor = '#d1c4e9'; // Робимо фіолетовим
+                document.body.style.backgroundColor = 'rgb(209, 196, 233)';
             }
         });
 
-        // Логіка коментарів
+        // 2. Логіка надсилання коментарів у Firebase
         const input = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
-        const section = document.getElementById('commentsSection');
+        const display = document.getElementById('displayComments');
 
         sendBtn.addEventListener('click', () => {
             const text = input.value;
+            if (text.trim() !== "") {
+                // Відправляємо об'єкт у базу
+                push(commentsRef, {
+                    message: text,
+                    time: Date.now()
+                });
+                input.value = '';
+            }
+        });
+
+        // 3. Логіка отримання коментарів (вони з'являться у всіх користувачів)
+        onChildAdded(commentsRef, (data) => {
+            const comment = data.val();
             const newComment = document.createElement('p');
-            newComment.textContent = `Користувач сказав: ${text}`;
-            section.appendChild(newComment);
-            input.value = '';
+            // Захист від XSS через textContent
+            newComment.textContent = `Користувач сказав: ${comment.message}`;
+            display.appendChild(newComment);
         });
     </script>
 </body>
