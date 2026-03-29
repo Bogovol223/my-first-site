@@ -15,9 +15,9 @@
     <div id="commentsSection">
         <button id="myBtn">Тикай!</button>
         <hr>
-        <h3>Залишити коментар:</h3>
+        <h3>Поділись анонімно думками:</h3>
         <input type="text" id="userInput" placeholder="Напишіть щось...">
-        <button id="sendBtn">Надіслати</button>
+        <button id="sendBtn">Надіслати в хмару</button>
         <div id="displayComments"></div>
     </div>
 
@@ -25,19 +25,21 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Твоя конфігурація Firebase
         const firebaseConfig = {
             databaseURL: "https://cyber-app-d1e13-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "cyber-app-d1e13",
         };
 
-        // Ініціалізація
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const commentsRef = ref(db, 'comments');
 
-        // 1. Логіка перемикача кольору (залишається локальною)
+        const input = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const display = document.getElementById('displayComments');
         const button = document.getElementById('myBtn');
+
+        // 1. Перемикач кольору фону
         button.addEventListener('click', () => {
             if (document.body.style.backgroundColor === 'rgb(209, 196, 233)') {
                 document.body.style.backgroundColor = '#eef2f3';
@@ -46,30 +48,42 @@
             }
         });
 
-        // 2. Логіка надсилання коментарів у Firebase
-        const input = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const display = document.getElementById('displayComments');
-
+        // 2. Логіка надсилання анонімних повідомлень
         sendBtn.addEventListener('click', () => {
-            const text = input.value;
-            if (text.trim() !== "") {
-                // Відправляємо об'єкт у базу
-                push(commentsRef, {
+            const text = input.value.trim();
+            if (text !== "") {
+                // Генерація випадкового ID аноніма (наприклад, Anon#4a1b)
+                const anonId = "Anon#" + Math.random().toString(16).slice(2, 6);
+                
+                push(commentsRef, { 
                     message: text,
-                    time: Date.now()
+                    author: anonId,
+                    timestamp: new Date().toLocaleTimeString()
                 });
                 input.value = '';
             }
         });
 
-        // 3. Логіка отримання коментарів (вони з'являться у всіх користувачів)
+        // 3. Логіка отримання та відображення коментарів
         onChildAdded(commentsRef, (data) => {
             const comment = data.val();
-            const newComment = document.createElement('p');
-            // Захист від XSS через textContent
-            newComment.textContent = `Користувач сказав: ${comment.message}`;
-            display.appendChild(newComment);
+            const p = document.createElement('p');
+            
+            // Стилізація окремого повідомлення
+            p.style.borderBottom = "1px solid #ddd";
+            p.style.padding = "10px";
+            p.style.textAlign = "left";
+            
+            // Використовуємо innerHTML для структури, але message беремо як текст для безпеки
+            const safeMessage = document.createElement('span');
+            safeMessage.textContent = comment.message;
+
+            p.innerHTML = `<strong style="color: #6200ee;">${comment.author || 'Анонім'}:</strong> `;
+            p.appendChild(safeMessage);
+            p.innerHTML += `<br> <small style="color: gray;">${comment.timestamp || ''}</small>`;
+            
+            // Додаємо нове повідомлення вгору списку
+            display.prepend(p);
         });
     </script>
 </body>
