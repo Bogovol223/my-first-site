@@ -8,11 +8,73 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     margin: 0;
-    padding: 40px 20px;
+    padding: 80px 20px 40px; /* Додав зверху відступ, щоб кнопка меню не налізала на текст */
     background-color: #eef2f3;
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+/* Кнопка-бургер (три риски) */
+#menuIcon {
+    cursor: pointer;
+    font-size: 30px;
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1001; /* Щоб була ПОВЕРХ усього */
+    background: white;
+    padding: 5px 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+#menuIcon:hover {
+    background: #f0f0f0;
+    transform: scale(1.1);
+}
+
+/* Бічна панель */
+.side-menu {
+    height: 100%;
+    width: 0; 
+    position: fixed;
+    z-index: 2000; /* Максимальний пріоритет */
+    top: 0;
+    left: 0;
+    background-color: #161b22; 
+    overflow-x: hidden;
+    transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+    padding-top: 60px;
+    border-right: 1px solid #30363d;
+    box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+}
+
+.side-menu h2 {
+    color: #58a6ff;
+    padding-left: 32px;
+    margin-bottom: 20px;
+}
+
+.side-menu a {
+    padding: 12px 8px 12px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #8b949e;
+    display: block;
+}
+
+.side-menu a:hover {
+    color: #58a6ff;
+    background-color: #21262d;
+}
+
+.side-menu .closebtn {
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 40px;
+    color: #8b949e;
 }
 
 /* Наша головна картка */
@@ -24,6 +86,17 @@ body {
     border-radius: 15px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.05);
     margin-top: 20px;
+    text-align: center;
+}
+
+/* Стилі для окремих коментарів */
+.comment-item {
+    background: #f8f9fa;
+    border-left: 4px solid #6e8efb;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 4px;
+    text-align: left;
 }
 
 /* Оформлення полів */
@@ -33,6 +106,11 @@ input {
     margin-bottom: 15px;
     border: 2px solid #ddd;
     border-radius: 8px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #a777e3;
 }
 
 /* Стиль для кнопок */
@@ -57,40 +135,4 @@ img {
     max-width: 100%;
     border-radius: 10px;
     margin-bottom: 20px;
-}
-/* Стилі для бічного меню */
-.side-menu {
-    height: 100%;
-    width: 0; /* Спочатку ширина 0 - воно приховане */
-    position: fixed;
-    z-index: 1000;
-    top: 0;
-    left: 0;
-    background-color: #161b22; /* Темний колір як у GitHub */
-    overflow-x: hidden;
-    transition: 0.5s; /* Швидкість виїзду */
-    padding-top: 60px;
-    border-right: 1px solid #30363d;
-}
-
-.side-menu a {
-    padding: 8px 8px 8px 32px;
-    text-decoration: none;
-    font-size: 20px;
-    color: #8b949e;
-    display: block;
-    transition: 0.3s;
-}
-
-.side-menu a:hover {
-    color: #58a6ff;
-    background-color: #21262d;
-}
-
-.side-menu .closebtn {
-    position: absolute;
-    top: 0;
-    right: 25px;
-    font-size: 36px;
-    margin-left: 50px;
 }

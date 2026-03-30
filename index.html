@@ -6,28 +6,31 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div id="menuIcon" style="cursor:pointer; font-size:30px; position:fixed; top:20px; left:20px; z-index:1001;">
-    &#9776; </div>
 
-<div id="sideMenu" class="side-menu">
-    <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
-    <h2 style="padding: 20px 8px 0 32px; color: #58a6ff;">Навігація</h2>
-    <a href="#">🏠 Головна</a>
-    <a href="#">📜 Інструкції</a>
-    <a href="#">🛡️ Поділитись думками</a>
-</div>
-    <h1>hello world</h1>
-    <p>Це мій перший сайт із хмарною базою даних!</p>
-    
-    <img src="my-photo.png.png" alt="картинка" width="300">
-    
-    <div id="commentsSection">
-        <button id="myBtn">Тикай!</button>
-        <hr>
-        <h3>Поділись анонімно думками:</h3>
-        <input type="text" id="userInput" placeholder="Напишіть щось...">
-        <button id="sendBtn">Надіслати в хмару</button>
-        <div id="displayComments"></div>
+    <div id="menuIcon">&#9776;</div>
+
+    <div id="sideMenu" class="side-menu">
+        <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
+        <h2>Навігація</h2>
+        <a href="#">🏠 Головна</a>
+        <a href="#">📜 Інструкції</a>
+        <a href="#">🛡️ Методи захисту</a>
+    </div>
+
+    <div id="mainContent">
+        <h1>hello world</h1>
+        <p>Це мій перший сайт із хмарною базою даних!</p>
+        
+        <img src="my-photo.png.png" alt="картинка" width="300">
+        
+        <div id="commentsSection">
+            <button id="myBtn">Тикай!</button>
+            <hr>
+            <h3>Поділись анонімно думками:</h3>
+            <input type="text" id="userInput" placeholder="Напишіть щось...">
+            <button id="sendBtn">Надіслати в хмару</button>
+            <div id="displayComments"></div>
+        </div>
     </div>
 
     <script type="module">
@@ -48,22 +51,16 @@
         const display = document.getElementById('displayComments');
         const button = document.getElementById('myBtn');
 
-        // 1. Перемикач кольору фону
-        button.addEventListener('click', () => {
-            if (document.body.style.backgroundColor === 'rgb(209, 196, 233)') {
-                document.body.style.backgroundColor = '#eef2f3';
-            } else {
-                document.body.style.backgroundColor = 'rgb(209, 196, 233)';
-            }
-        });
+        // 1. Керування кольором фону
+        button.onclick = () => {
+            document.body.style.backgroundColor = (document.body.style.backgroundColor === 'rgb(209, 196, 233)') ? '#eef2f3' : 'rgb(209, 196, 233)';
+        };
 
-        // 2. Логіка надсилання анонімних повідомлень
-        sendBtn.addEventListener('click', () => {
+        // 2. Надсилання в Firebase
+        sendBtn.onclick = () => {
             const text = input.value.trim();
             if (text !== "") {
-                // Генерація випадкового ID аноніма (наприклад, Anon#4a1b)
                 const anonId = "Anon#" + Math.random().toString(16).slice(2, 6);
-                
                 push(commentsRef, { 
                     message: text,
                     author: anonId,
@@ -71,19 +68,14 @@
                 });
                 input.value = '';
             }
-        });
+        };
 
-        // 3. Логіка отримання та відображення коментарів
+        // 3. Відображення коментарів
         onChildAdded(commentsRef, (data) => {
             const comment = data.val();
             const p = document.createElement('p');
-            
-            // Стилізація окремого повідомлення
-            p.style.borderBottom = "1px solid #ddd";
-            p.style.padding = "10px";
-            p.style.textAlign = "left";
-            
-            // Використовуємо innerHTML для структури, але message беремо як текст для безпеки
+            p.className = "comment-item";
+
             const safeMessage = document.createElement('span');
             safeMessage.textContent = comment.message;
 
@@ -91,21 +83,17 @@
             p.appendChild(safeMessage);
             p.innerHTML += `<br> <small style="color: gray;">${comment.timestamp || ''}</small>`;
             
-            // Додаємо нове повідомлення вгору списку
             display.prepend(p);
         });
-        // Керування меню
-            const menuIcon = document.getElementById("menuIcon");
-            const sideMenu = document.getElementById("sideMenu");
-            const closeMenu = document.getElementById("closeMenu");
 
-         menuIcon.addEventListener("click", () => {
-    sideMenu.style.width = "250px"; // Відкриваємо
-});
+        // 4. Логіка меню
+        const menuIcon = document.getElementById("menuIcon");
+        const sideMenu = document.getElementById("sideMenu");
+        const closeMenu = document.getElementById("closeMenu");
 
-            closeMenu.addEventListener("click", () => {
-    sideMenu.style.width = "0"; // Закриваємо
-});
+        menuIcon.onclick = () => sideMenu.style.width = "250px";
+        closeMenu.onclick = () => sideMenu.style.width = "0";
+
     </script>
 </body>
 </html>
