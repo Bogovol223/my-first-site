@@ -94,6 +94,18 @@
             // Додаємо нове повідомлення вгору списку
             display.prepend(p);
         });
+        // Керування меню
+            const menuIcon = document.getElementById("menuIcon");
+            const sideMenu = document.getElementById("sideMenu");
+            const closeMenu = document.getElementById("closeMenu");
+
+         menuIcon.addEventListener("click", () => {
+    sideMenu.style.width = "250px"; // Відкриваємо
+});
+
+            closeMenu.addEventListener("click", () => {
+    sideMenu.style.width = "0"; // Закриваємо
+});
     </script>
 </body>
 </html>
