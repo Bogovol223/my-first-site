@@ -8,9 +8,8 @@
 <body>
 
     <div id="menuIcon">&#9776;</div>
-
-<div id="sideMenu" class="side-menu">
-    <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
+    <div id="sideMenu" class="side-menu">
+       <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
     <h2>Навігація</h2>
     <a href="#">🏠 Головна</a>
     <a href="#">📜 Інструкції</a>
@@ -86,14 +85,15 @@
             display.prepend(p);
         });
 
-        // 4. Логіка меню
-        const menuIcon = document.getElementById("menuIcon");
-        const sideMenu = document.getElementById("sideMenu");
-        const closeMenu = document.getElementById("closeMenu");
+    // 4. Логіка меню (через додавання класу)
+const menuIcon = document.getElementById("menuIcon");
+const sideMenu = document.getElementById("sideMenu");
+const closeMenu = document.getElementById("closeMenu");
 
-        menuIcon.onclick = () => sideMenu.style.width = "250px";
-        closeMenu.onclick = () => sideMenu.style.width = "0";
+menuIcon.onclick = () => {
+    sideMenu.classList.add("active"); // Додаємо клас, і меню виїжджає
+};
 
-    </script>
-</body>
-</html>
+closeMenu.onclick = () => {
+    sideMenu.classList.remove("active"); // Прибираємо клас, і воно ховається
+};
