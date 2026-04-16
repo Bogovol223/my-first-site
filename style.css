@@ -8,135 +8,177 @@ body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.6;
     margin: 0;
-    padding: 80px 20px 40px; /* Додав зверху відступ, щоб кнопка меню не налізала на текст */
+    padding: 80px 20px 40px;
     background-color: #eef2f3;
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100vh;
 }
 
 /* Кнопка три риски */
 #menuIcon {
-    position: fixed; /* Фіксуємо, щоб не їздила при скролі */
+    position: fixed;
     top: 20px;
     left: 20px;
-    font-size: 30px;
+    font-size: 24px;
     cursor: pointer;
-    z-index: 1001; /* Поверх усього */
-    background: white;
-    padding: 5px 10px;
+    z-index: 1001;
+    background: #000000;
+    color: rgb(255, 255, 255);
+    padding: 10px 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
-/* Сама панель меню */
+#menuIcon:hover {
+    background: #58a6ff;
+}
+
+/* Панель меню */
 .side-menu {
     height: 100%;
-    width: 250px; /* Фіксована ширина */
+    width: 250px;
     position: fixed;
     z-index: 1002;
     top: 0;
-    left: -250px; /* Повністю ховаємо за лівий край */
+    left: -250px; /* Сховано за екраном */
     background-color: #161b22;
-    transition: 0.4s; /* Плавність виїзду */
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     padding-top: 60px;
     box-shadow: 5px 0 15px rgba(0,0,0,0.3);
 }
 
-/* Коли додаємо цей стиль через JS, меню виїжджає */
+/* Стан активованого меню (додається через JS) */
 .side-menu.active {
     left: 0;
-}
-
-/* Центрування основного контенту */
-.main-container {
-    text-align: center;
-    padding-top: 60px;
 }
 
 .side-menu h2 {
     color: #58a6ff;
     padding-left: 32px;
     margin-bottom: 20px;
+    font-size: 22px;
 }
 
 .side-menu a {
-    padding: 12px 8px 12px 32px;
+    padding: 15px 32px;
     text-decoration: none;
     font-size: 18px;
     color: #8b949e;
     display: block;
+    border-left: 4px solid transparent;
 }
 
 .side-menu a:hover {
-    color: #58a6ff;
+    color: #ffffff;
     background-color: #21262d;
+    border-left: 4px solid #58a6ff;
 }
 
 .side-menu .closebtn {
     position: absolute;
     top: 10px;
-    right: 25px;
-    font-size: 40px;
+    right: 20px;
+    font-size: 36px;
     color: #8b949e;
 }
 
-/* Наша головна картка */
-#commentsSection {
-    background: #ffffff;
+/* Контейнер сторінок */
+.main-container {
     width: 100%;
-    max-width: 500px;
-    padding: 30px;
-    border-radius: 15px;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-    margin-top: 20px;
+    max-width: 800px;
     text-align: center;
+    animation: fadeIn 0.5s ease;
 }
 
-/* Стилі для окремих коментарів */
+/* Стиль для окремих "сторінок" */
+.page {
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+/* Анімація появи сторінки */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Список в інструкціях */
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px auto;
+    max-width: 400px;
+}
+
+li {
+    background: #f0f6ff;
+    margin: 10px 0;
+    padding: 15px;
+    border-radius: 10px;
+    border-left: 5px solid #58a6ff;
+    text-align: left;
+}
+
+/* Секція коментарів */
+#commentsSection {
+    margin-top: 20px;
+}
+
 .comment-item {
     background: #f8f9fa;
     border-left: 4px solid #6e8efb;
     padding: 12px;
-    margin: 10px 0;
-    border-radius: 4px;
+    margin: 15px 0;
+    border-radius: 8px;
     text-align: left;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
 }
 
-/* Оформлення полів */
+/* Поля вводу та кнопки */
 input {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
     margin-bottom: 15px;
-    border: 2px solid #ddd;
-    border-radius: 8px;
+    border: 2px solid #e1e4e8;
+    border-radius: 10px;
     outline: none;
+    font-size: 16px;
 }
 
 input:focus {
-    border-color: #a777e3;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.2);
 }
 
-/* Стиль для кнопок */
 button {
     background: linear-gradient(135deg, #6e8efb, #a777e3);
     color: white;
     font-weight: bold;
     border: none;
-    padding: 12px 25px;
-    border-radius: 8px;
+    padding: 14px 25px;
+    border-radius: 10px;
     cursor: pointer;
     width: 100%;
+    font-size: 16px;
     margin-bottom: 10px;
 }
 
 button:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(110, 142, 251, 0.4);
+    filter: brightness(1.1);
 }
 
 img {
     max-width: 100%;
-    border-radius: 10px;
-    margin-bottom: 20px;
+    height: auto;
+    border-radius: 15px;
+    margin: 20px 0;
+    border: 5px solid white;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }

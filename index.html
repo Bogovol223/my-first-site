@@ -7,103 +7,128 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
     <div id="menuIcon">&#9776;</div>
     <div id="sideMenu" class="side-menu">
-        <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
-        <h2>Навігація</h2>
-        <a href="#">🏠 Головна</a>
-        <a href="#">📜 Інструкції</a>
-        <a href="#">🛡️ Поділитись думками</a>
+    <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
+    <h2>Навігація</h2>
+    <a href="#" id="link-home">🏠 Головна</a>
+    <a href="#" id="link-instr">📜 Інструкції</a>
+    <a href="#" id="link-comm">🛡️ Поділитись думками</a>
+</div>
+
+<div class="main-container">
+    <div id="home-page" class="page">
+        <h1>Вітаю на Кібер-порталі!</h1>
+        <p>Це головна сторінка. Тут ми будемо публікувати новини проекту.</p>
+        <img src="my-photo.png.png" alt="картинка" width="300">
     </div>
 
-    <div class="main-container">
-        <h1>Hello world</h1>
-        <p>Це мій перший сайт із хмарною базою даних!</p>
-        <img src="my-photo.png.png" alt="картинка" width="300">
-        
+    <div id="instructions-page" class="page" style="display: none;">
+        <h1>📜 Інструкції з безпеки для вас</h1>
+        <ul style="text-align: left; display: inline-block;">
+            <li>Не використовуй однакові паролі.</li>
+            <li>Завжди перевіряй URL сайту.</li>
+            <li>Використовуй Linux для тестів.</li>
+        </ul>
+    </div>
+
+    <div id="comments-page" class="page" style="display: none;">
+        <h3>Поділись анонімно думками:</h3>
         <div id="commentsSection">
-            <button id="myBtn">Тикай!</button>
+            <button id="myBtn">Змінити фон</button>
             <hr>
-            <h3>Поділись анонімно думками:</h3>
             <input type="text" id="userInput" placeholder="Напишіть щось...">
-            <button id="sendBtn">Надіслати в хмару</button>
+            <button id="sendBtn">Надіслати</button>
             <div id="displayComments"></div>
         </div>
     </div>
+</div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+   <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
-        // Твій конфіг
-        const firebaseConfig = {
-            databaseURL: "https://cyber-app-d1e13-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "cyber-app-d1e13",
-        };
+    const firebaseConfig = {
+        databaseURL: "https://cyber-app-d1e13-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "cyber-app-d1e13",
+    };
 
-        // Ініціалізація
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const commentsRef = ref(db, 'comments');
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+    const commentsRef = ref(db, 'comments');
 
-        console.log("Firebase ініціалізовано. Перевіряю елементи...");
+    // Елементи меню та сторінок
+    const sideMenu = document.getElementById("sideMenu");
+    const menuIcon = document.getElementById("menuIcon");
+    const closeMenu = document.getElementById("closeMenu");
 
-        // Елементи
-        const input = document.getElementById('userInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const display = document.getElementById('displayComments');
-        const button = document.getElementById('myBtn');
-        const menuIcon = document.getElementById("menuIcon");
-        const sideMenu = document.getElementById("sideMenu");
-        const closeMenu = document.getElementById("closeMenu");
-
-        // 1. Керування фоном
-        if(button) {
-            button.onclick = () => {
-                console.log("Зміна фону");
-                document.body.style.backgroundColor = (document.body.style.backgroundColor === 'rgb(209, 196, 233)') ? '#eef2f3' : 'rgb(209, 196, 233)';
-            };
-        }
-
-        // 2. Надсилання повідомлень
-        if(sendBtn) {
-            sendBtn.onclick = () => {
-                const text = input.value.trim();
-                if (text !== "") {
-                    const anonId = "Anon#" + Math.random().toString(16).slice(2, 6);
-                    push(commentsRef, { 
-                        message: text,
-                        author: anonId,
-                        timestamp: new Date().toLocaleTimeString()
-                    }).then(() => console.log("Дані надіслано!"))
-                      .catch((err) => console.error("Помилка Firebase:", err));
-                    input.value = '';
-                }
-            };
-        }
-
-        // 3. Відображення
-        onChildAdded(commentsRef, (data) => {
-            const comment = data.val();
-            const p = document.createElement('p');
-            p.className = "comment-item";
-            p.innerHTML = `<strong style="color: #6200ee;">${comment.author || 'Анонім'}:</strong> <span></span><br><small style="color: gray;">${comment.timestamp || ''}</small>`;
-            p.querySelector('span').textContent = comment.message;
-            display.prepend(p);
+    // Функція перемикання сторінок
+    const showPage = (pageId) => {
+        console.log("Перемикаю на сторінку:", pageId);
+        // Ховаємо всі сторінки
+        document.querySelectorAll('.page').forEach(page => {
+            page.style.display = 'none';
         });
-
-        // 4. Логіка меню
-        if (menuIcon && sideMenu && closeMenu) {
-            menuIcon.onclick = () => {
-                console.log("Відкриваю меню");
-                sideMenu.style.left = "0";
-            };
-            closeMenu.onclick = () => {
-                console.log("Закриваю меню");
-                sideMenu.style.left = "-250px";
-            };
+        // Показуємо потрібну
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.style.display = 'block';
         }
+        // Закриваємо меню
+        sideMenu.classList.remove("active");
+    };
+
+    // Прив'язка кліків до кнопок меню
+    // Переконайся, що в HTML у посилань <a> є саме такі id
+    document.getElementById('link-home').onclick = () => showPage('home-page');
+    document.getElementById('link-instr').onclick = () => showPage('instructions-page');
+    document.getElementById('link-comm').onclick = () => showPage('comments-page');
+
+    // Логіка відкриття/закриття меню
+    menuIcon.onclick = () => sideMenu.classList.add("active");
+    closeMenu.onclick = () => sideMenu.classList.remove("active");
+
+    // --- ЛОГІКА КОМЕНТАРІВ (Firebase) ---
+    const input = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const display = document.getElementById('displayComments');
+
+    sendBtn.onclick = () => {
+        const text = input.value.trim();
+        if (text !== "") {
+            const anonId = "Anon#" + Math.random().toString(16).slice(2, 6);
+            push(commentsRef, { 
+                message: text,
+                author: anonId,
+                timestamp: new Date().toLocaleTimeString()
+            });
+            input.value = '';
+        }
+    };
+
+    onChildAdded(commentsRef, (data) => {
+        const comment = data.val();
+        const p = document.createElement('p');
+        p.className = "comment-item";
+        p.innerHTML = `<strong>${comment.author}:</strong> <span></span><br><small>${comment.timestamp}</small>`;
+        p.querySelector('span').textContent = comment.message;
+        display.prepend(p);
+    });
+    // Універсальний обробник кліків (працює навіть для прихованих елементів)
+document.addEventListener('click', function (event) {
+    // Перевіряємо, чи натиснули саме на кнопку зміни фону
+    if (event.target && event.target.id === 'myBtn') {
+        console.log("Сигнал отримано: Міняю фон!");
+        
+        // Логіка зміни кольору
+        const body = document.body;
+        if (body.style.backgroundColor === 'rgb(209, 196, 233)') {
+            body.style.backgroundColor = '#eef2f3';
+        } else {
+            body.style.backgroundColor = 'rgb(209, 196, 233)';
+        }
+    }
+});
     </script>
 </body>
 </html>
