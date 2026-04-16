@@ -2,6 +2,7 @@
 <html lang="uk">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Мій Кібер-сайт</title>
     <link rel="stylesheet" href="style.css">
 </head>
@@ -9,18 +10,17 @@
 
     <div id="menuIcon">&#9776;</div>
     <div id="sideMenu" class="side-menu">
-       <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
-    <h2>Навігація</h2>
-    <a href="#">🏠 Головна</a>
-    <a href="#">📜 Інструкції</a>
-    <a href="#">🛡️ Поділитись думками</a>
-</div>
-
-<div class="main-container">
-    <h1>Hello world</h1>
-    <p>Це мій перший сайт із хмарною базою даних!</p>
-    <img src="my-photo.png.png" alt="картинка" width="300">
+        <a href="javascript:void(0)" class="closebtn" id="closeMenu">&times;</a>
+        <h2>Навігація</h2>
+        <a href="#">🏠 Головна</a>
+        <a href="#">📜 Інструкції</a>
+        <a href="#">🛡️ Поділитись думками</a>
     </div>
+
+    <div class="main-container">
+        <h1>Hello world</h1>
+        <p>Це мій перший сайт із хмарною базою даних!</p>
+        <img src="my-photo.png" alt="картинка" width="300">
         
         <div id="commentsSection">
             <button id="myBtn">Тикай!</button>
@@ -36,79 +36,74 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
 
+        // Твій конфіг
         const firebaseConfig = {
             databaseURL: "https://cyber-app-d1e13-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "cyber-app-d1e13",
         };
 
+        // Ініціалізація
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const commentsRef = ref(db, 'comments');
 
+        console.log("Firebase ініціалізовано. Перевіряю елементи...");
+
+        // Елементи
         const input = document.getElementById('userInput');
         const sendBtn = document.getElementById('sendBtn');
         const display = document.getElementById('displayComments');
         const button = document.getElementById('myBtn');
+        const menuIcon = document.getElementById("menuIcon");
+        const sideMenu = document.getElementById("sideMenu");
+        const closeMenu = document.getElementById("closeMenu");
 
-        // 1. Керування кольором фону
-        button.onclick = () => {
-            document.body.style.backgroundColor = (document.body.style.backgroundColor === 'rgb(209, 196, 233)') ? '#eef2f3' : 'rgb(209, 196, 233)';
-        };
+        // 1. Керування фоном
+        if(button) {
+            button.onclick = () => {
+                console.log("Зміна фону");
+                document.body.style.backgroundColor = (document.body.style.backgroundColor === 'rgb(209, 196, 233)') ? '#eef2f3' : 'rgb(209, 196, 233)';
+            };
+        }
 
-        // 2. Надсилання в Firebase
-        sendBtn.onclick = () => {
-            const text = input.value.trim();
-            if (text !== "") {
-                const anonId = "Anon#" + Math.random().toString(16).slice(2, 6);
-                push(commentsRef, { 
-                    message: text,
-                    author: anonId,
-                    timestamp: new Date().toLocaleTimeString()
-                });
-                input.value = '';
-            }
-        };
+        // 2. Надсилання повідомлень
+        if(sendBtn) {
+            sendBtn.onclick = () => {
+                const text = input.value.trim();
+                if (text !== "") {
+                    const anonId = "Anon#" + Math.random().toString(16).slice(2, 6);
+                    push(commentsRef, { 
+                        message: text,
+                        author: anonId,
+                        timestamp: new Date().toLocaleTimeString()
+                    }).then(() => console.log("Дані надіслано!"))
+                      .catch((err) => console.error("Помилка Firebase:", err));
+                    input.value = '';
+                }
+            };
+        }
 
-        // 3. Відображення коментарів
+        // 3. Відображення
         onChildAdded(commentsRef, (data) => {
             const comment = data.val();
             const p = document.createElement('p');
             p.className = "comment-item";
-
-            const safeMessage = document.createElement('span');
-            safeMessage.textContent = comment.message;
-
-            p.innerHTML = `<strong style="color: #6200ee;">${comment.author || 'Анонім'}:</strong> `;
-            p.appendChild(safeMessage);
-            p.innerHTML += `<br> <small style="color: gray;">${comment.timestamp || ''}</small>`;
-            
+            p.innerHTML = `<strong style="color: #6200ee;">${comment.author || 'Анонім'}:</strong> <span></span><br><small style="color: gray;">${comment.timestamp || ''}</small>`;
+            p.querySelector('span').textContent = comment.message;
             display.prepend(p);
         });
 
-   // 4. Логіка меню (Захищений варіант)
-const initMenu = () => {
-    const menuIcon = document.getElementById("menuIcon");
-    const sideMenu = document.getElementById("sideMenu");
-    const closeMenu = document.getElementById("closeMenu");
-
-    if (menuIcon && sideMenu && closeMenu) {
-        menuIcon.onclick = () => {
-            console.log("Меню відкривається");
-            sideMenu.style.left = "0";
-        };
-
-        closeMenu.onclick = () => {
-            console.log("Меню закривається");
-            sideMenu.style.left = "-250px";
-        };
-    } else {
-        console.error("SOC Попередження: Елементи меню не знайдено!");
-    }
-};
-
-// Запускаємо логіку тільки коли все дерево HTML готове
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initMenu);
-} else {
-    initMenu();
-}
+        // 4. Логіка меню
+        if (menuIcon && sideMenu && closeMenu) {
+            menuIcon.onclick = () => {
+                console.log("Відкриваю меню");
+                sideMenu.style.left = "0";
+            };
+            closeMenu.onclick = () => {
+                console.log("Закриваю меню");
+                sideMenu.style.left = "-250px";
+            };
+        }
+    </script>
+</body>
+</html>
