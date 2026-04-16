@@ -85,15 +85,30 @@
             display.prepend(p);
         });
 
-    // 4. Логіка меню (через додавання класу)
-const menuIcon = document.getElementById("menuIcon");
-const sideMenu = document.getElementById("sideMenu");
-const closeMenu = document.getElementById("closeMenu");
+   // 4. Логіка меню (Захищений варіант)
+const initMenu = () => {
+    const menuIcon = document.getElementById("menuIcon");
+    const sideMenu = document.getElementById("sideMenu");
+    const closeMenu = document.getElementById("closeMenu");
 
-menuIcon.onclick = () => {
-    sideMenu.classList.add("active"); // Додаємо клас, і меню виїжджає
+    if (menuIcon && sideMenu && closeMenu) {
+        menuIcon.onclick = () => {
+            console.log("Меню відкривається");
+            sideMenu.style.left = "0";
+        };
+
+        closeMenu.onclick = () => {
+            console.log("Меню закривається");
+            sideMenu.style.left = "-250px";
+        };
+    } else {
+        console.error("SOC Попередження: Елементи меню не знайдено!");
+    }
 };
 
-closeMenu.onclick = () => {
-    sideMenu.classList.remove("active"); // Прибираємо клас, і воно ховається
-};
+// Запускаємо логіку тільки коли все дерево HTML готове
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMenu);
+} else {
+    initMenu();
+}
